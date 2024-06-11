@@ -1,0 +1,86 @@
+﻿@model CustomerHub.DAL.ViewModels.CustomerGroupDTO
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+<div class="modal fade custom-modal" id="OpenCustomerGroupModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between p-2" style="background-color:#4777ae">
+                <div class="">
+                    <input hidden asp-for="CustomerId" />
+                    @if (Model.CallId == 2)
+                    {
+                        <button class="btn shadow btn-light" onclick="AddCustomerGroup(@Model.CustomerId)"><i class="fa-solid fa-plus px-2 fs-5" style="color:#4169BF"></i></button>
+                    }
+                </div>
+                <div class="">
+                    <button type="button" class="btn shadow btn-light" onclick="ClearSearch()"><i class="fa-solid fa-broom px-2 fs-5" style="color:#4169BF"></i></button>
+                    <button type="button" class="btn shadow btn-light" onclick="" aria-label="Close" data-bs-dismiss="modal"><i class="fa-solid fa-xmark px-2 fs-5" style="color:#4169BF"></i></button>
+                </div>
+            </div>
+            <div class="p-3">
+                <input type="text" id="SupplierGroupSearch" class="rounded w-100 border-info border-1" onkeyup="filterSuppliers()" placeholder="Search" />
+                <span id="search-Record-Info"></span>
+                <div class="bg-light mt-2">
+                    <span class="fw-semibold p-3" style="font-size:15px">Name</span>
+                </div>
+                @if (Model.SupplierGroups.Count > 0)
+                {
+                    @foreach (var obj in Model.SupplierGroups)
+                    {
+                        <div class="bg-light mt-2 d-flex justify-content-between supplier-item">
+                            <div class="mt-2">
+                                @if (Model.CallId == 2)
+                                {
+                                    @if (obj.IsAssigned == true)
+                                    {
+                                        <input type="checkbox" checked id="supplier_@obj.SupplierGroupId" class="ms-2 form-check-input" onchange="Assign(@obj.SupplierGroupId)">
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" id="supplier_@obj.SupplierGroupId" class="ms-2 form-check-input" onchange="Assign(@obj.SupplierGroupId)">
+                                    }
+                                }
+                                else
+                                {
+                                    @if (obj.IsAssigned == true)
+                                    {
+                                        <input type="checkbox" disabled checked id="supplier_@obj.SupplierGroupId" class="ms-2 form-check-input" onchange="Assign(@obj.SupplierGroupId)">
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" disabled id="supplier_@obj.SupplierGroupId" class="ms-2 form-check-input" onchange="Assign(@obj.SupplierGroupId)">
+                                    }
+                                }
+                                <span class="ms-4 mb-5 mt-2 supplier-name" id="supplierName_@obj.SupplierGroupId" style="font-size:15px">@obj.SupplierName</span>
+                            </div>
+                            @if (Model.CallId == 2)
+                            {
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn bg-transparent" onclick="EditCustomerGroup(@obj.SupplierGroupId)"><i class="bi bi-pencil-fill" style="color:#592198"></i></button>
+                                    <button type="button" class="btn bg-transparent" onclick="DeleteCustomerGroup(@obj.SupplierGroupId)"><i class="fa-solid fa-trash-can text-danger"></i></button>
+                                </div>
+                                <div class="">
+                                    <form id="SupplierWiseDiv_@obj.SupplierGroupId" class="d-none" method="post" onsubmit="PostEditCustomerGroupForm(@obj.SupplierGroupId, @Model.CustomerId)">
+                                        <input hidden name="SupplierGroupId" id="id_@obj.SupplierGroupId" asp-for="@obj.SupplierGroupId">
+                                        <input hidden name="CustomerId" asp-for="CustomerId">
+                                        <input hidden name="SupplierGroupName" id="name_@obj.SupplierGroupId" asp-for="@obj.SupplierName">
+                                        <input type="text" class="rounded w-auto h-auto border-info" id="suppName_@obj.SupplierGroupId" name="SupplierGroupName" asp-for="@obj.SupplierName" onkeyup="ValidateEditCustomerGroupForm(@obj.SupplierGroupId)" />
+                                        <span class="text-danger" asp-validation-for="@Model.SupplierGroupName"></span>
+                                        <button type="submit" disabled id="submit_@obj.SupplierGroupId" class="btn bg-transparent border-0"><i class="fa-regular fa-floppy-disk text-success"></i></button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class=""><img style="height:10%;padding:-94px;opacity:0.5" src="~/images/no_data.png" /></div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

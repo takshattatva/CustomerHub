@@ -1,0 +1,30 @@
+﻿@model CustomerHub.DAL.ViewModels.CustomerContactDTO
+
+<div class="modal fade" id="AddCustomerContactId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between p-2" style="background-color:#4777ae">
+                <div class="">
+                    <span class="text-light fw-semibold">Add Contact</span>
+                </div>
+                <div class="">
+                    <button type="button" class="btn shadow btn-light" onclick="OpenCustomerContactModal(@Model.CustomerId,2)" aria-label="Close" data-bs-dismiss="modal"><i class="fa-solid fa-xmark px-2 fs-5" style="color:#4169BF"></i></button>
+                </div>
+            </div>
+            <div class=" p-3">
+                <form id="AddCustomerContactForm" method="post" onsubmit="CreateCustomerContact(@Model.CustomerId)">
+                    <input hidden asp-for="CustomerId">
+                    <span class="fw-semibold">Name <i class="fa-solid fa-star-of-life ms-3 text-danger" style="font-size:12px"></i></span>
+                    <input type="text" asp-for="FullName" id="floatingContactName" class="rounded border-info ms-3 w-75 border-1 border-bottom-1 border-start-1 border-top-0 border-end-0" />
+                    <span class="text-danger" asp-validation-for="FullName"></span>
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="btn btn-success fw-semibold shadow px-5 py-0">Save</button>
+                        <button type="button" class="btn btn-outline-secondary fw-semibold shadow ms-2 py-0 px-5" data-bs-dismiss="modal" onclick="OpenCustomerContactModal(@Model.CustomerId,2)">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />

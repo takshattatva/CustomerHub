@@ -1,0 +1,213 @@
+﻿@model CustomerHub.DAL.ViewModels.CustomerContactDTO
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+<form class="ContactFormView d-none" id="EditCustomerContactForm" method="post" onsubmit="EditCustomerContactPost(@Model.CustomerId, @Model.ContactId)">
+    <input type="text" asp-for="@Model.CustomerId" hidden>
+    <input type="text" asp-for="@Model.ContactId" hidden>
+    <input type="text" asp-for="@Model.FullName" hidden>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3">
+            <span class="fw-semibold text-muted">Full Name :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <span class="fw-semibold" onclick="OpenCustomerContactModal(@Model.CustomerId,2)" style="border-bottom:solid;padding-bottom:2px;border-width:1px;cursor:pointer">@Model.ContactList <i class="bi bi-chevron-down ms-5"></i></span>
+        </div>
+    </div>
+    @if (Model.ContactList != "No Contact Added Yet")
+    {
+        <div class="row">
+            <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+                <span class="fw-semibold text-muted">"Dear"Text :</span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="@Model.UserName" type="text" class="form-control  h-auto w-auto px-2 py-2" id="floatingUNameEdit" placeholder="User Name" disabled>
+                <span class="text-danger" asp-validation-for="@Model.UserName"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+                <span class="fw-semibold text-muted">Telephone :</span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="@Model.Telephone" type="text" class="form-control  h-auto w-auto py-2" id="floatingTelephoneEdit" placeholder="Telephone" disabled>
+                <span class="text-danger" asp-validation-for="@Model.Telephone"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+                <span class="fw-semibold text-muted">Email :</span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <input asp-for="@Model.Email" type="text" class="form-control  h-auto w-auto py-2" id="floatingEmailEdit" placeholder="Email" disabled onkeyup="EnableSubscriptionEdit()">
+                <span class="text-danger" asp-validation-for="@Model.Email"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+                <span class="fw-semibold text-muted">Mailing List :</span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                @{
+                    var mailingListSelectList = new SelectList(new[]
+                    {
+            new { Value = "Subscribed", Text = "Subscribed" },
+            new { Value = "UnSubscribed", Text = "UnSubscribed" }
+            }, "Value", "Text");
+                }
+
+                <select asp-for="@Model.MailingList" class="form-control  h-auto py-2" style="width:207px" disabled id="floatingMailingListEdit" asp-items="@mailingListSelectList">
+                    <option value="">Select an option</option>
+                </select>
+                <span class="text-danger" asp-validation-for="@Model.MailingList"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-2 form-floating mb-3 mt-3 text-end">
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3 text-start">
+                <button type="submit" class="submitContactBtn btn btn-outline-info fw-semibold shadow">Submit</button>
+                <button type="button" class="cancelContactBtn btn btn-outline-secondary fw-semibold shadow ms-5" onclick="DisableContact()">Cancel</button>
+            </div>
+        </div>
+    }
+</form>
+
+
+<div class="ContactNormalView">
+    <input type="text" asp-for="@Model.CustomerId" hidden>
+    <input type="text" asp-for="@Model.ContactId" hidden>
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3">
+            <span class="fw-semibold text-muted">Full Name :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <span class="fw-semibold" onclick="OpenCustomerContactModal(@Model.CustomerId,1)" style="border-bottom:solid;padding-bottom:2px;border-width:1px;cursor:pointer">@Model.ContactList <i class="bi bi-chevron-down ms-5"></i></span>
+        </div>
+    </div>
+
+    @if (Model.ContactList != "No Contact Added Yet")
+    {
+        <div class="row">
+            <div class="col-12 col-md-2 form-floating mb-3">
+                <span class="fw-semibold text-muted">Dear @Model.FullName  :</span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <span class="fw-semibold">@Model.UserName</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-2 form-floating mb-3">
+                <span class="fw-semibold text-muted">Telephone :</span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <span class="fw-semibold">@Model.Telephone</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-2 form-floating mb-3">
+                <span class="fw-semibold text-muted">Email :</span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <span class="fw-semibold">@Model.Email</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-2 form-floating mb-3">
+                <span class="fw-semibold text-muted">Mailing List :</span>
+            </div>
+            <div class="col-12 col-md-6 form-floating mb-3">
+                <span class="fw-semibold">@Model.MailingList</span>
+            </div>
+        </div>
+    }
+</div>
+
+
+<form class="AddContactFormView d-none" id="AddCustomerContactForm" method="post" onsubmit="CreateCustomerContact(@Model.CustomerId)">
+    <input type="text" asp-for="@Model.CustomerId" hidden>
+    <input type="text" asp-for="@Model.ContactId" hidden>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3">
+            <span class="fw-semibold text-muted">Full Name :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="FullName" type="text" class="form-control  AtAddContact h-auto w-auto px-2 py-2" id="floatingFNameAtAddContact" placeholder="Full Name" onkeyup="ValidateContactName(@Model.CustomerId)">
+            <label for="floatingFName" class="ms-2">Full Name</label>
+            <span class="text-danger" asp-validation-for="FullName"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">"Dear"Text :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="UserName" type="text" class="form-control  AtAddContact h-auto w-auto px-2 py-2" id="floatingUName" placeholder="User Name">
+            <label for="floatingUName" class="ms-2">User Name</label>
+            <span class="text-danger" asp-validation-for="UserName"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Telephone :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="Telephone" type="text" class="form-control  AtAddContact h-auto w-auto py-2" id="floatingTelephone" placeholder="Telephone">
+            <label for="floatingTelephone" class="ms-2">Telephone</label>
+            <span class="text-danger" asp-validation-for="Telephone"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Email :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="Email" type="text" class="form-control  AtAddContact h-auto w-auto py-2" id="floatingEmailAtAddContact" placeholder="Email" onkeyup="EnableSubscription()">
+            <label for="floatingEmail" class="ms-2">Email</label>
+            <span class="text-danger" asp-validation-for="Email"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Mailing List :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            @{
+                var mailingListOptions = new SelectList(new[]
+                {
+            new { Value = "Subscribed", Text = "Subscribed" },
+            new { Value = "UnSubscribed", Text = "UnSubscribed" }
+            }, "Value", "Text");
+            }
+
+            <select asp-for="@Model.MailingList" class="form-control  AtAddContact h-auto py-2" style="width:207px" disabled id="floatingMailingListEditAtAddContact" asp-items="@mailingListOptions">
+                <option value="">Select an option</option>
+            </select>
+            <span class="text-danger" asp-validation-for="@Model.MailingList"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3 text-end">
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3 text-start">
+            <button type="submit" class="submitContactBtn btn btn-outline-info fw-semibold shadow">Save</button>
+            <button type="button" class="btn btn-outline-secondary fw-semibold shadow ms-5" onclick="RemoveFormView(@Model.CustomerId)">Cancel</button>
+        </div>
+    </div>
+</form>
+
+<partial name="_ValidationScriptsPartial" /> 

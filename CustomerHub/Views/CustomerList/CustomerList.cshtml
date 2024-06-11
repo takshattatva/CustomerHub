@@ -1,0 +1,113 @@
+﻿@using CustomerHub.DAL.ViewModels;
+@model RequestDTO<CustomerList>;
+@{
+    ViewData["Title"] = "Customer List";
+}
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+@{
+    var pageNumber = ViewBag.PageNumber;
+}
+<input hidden value="@pageNumber" >
+<div class="header px-3">
+    <div class="d-flex justify-content-between">
+        <div class="" style="height:fit-content">
+            <div class="search-bar">
+                <i class="fas fa-bars"></i>
+                <input type="text" id="searchValue" placeholder="Search Customers" onkeyup="SearchInTable()">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div style="margin-top:12px">
+            <a asp-action="CustomerList" asp-controller="CustomerList" class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "CustomerList"? "active" : "inactive") text-decoration-none">
+                <i class="fas fa-list"></i>
+                <span>List</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <div class="bg-light">
+        <form method="post" id="filterListPost" onsubmit="FilterListPost()">
+            <input hidden asp-for="PageNumber">
+            <input hidden asp-for="SearchValue">
+            <input hidden asp-for="PageSize">
+            <input hidden asp-for="OrderByAsc">
+            <input hidden asp-for="SortColumn">
+            <div class="row p-2">
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3">
+                    <input asp-for="SearchString.AcCode" class="form-control" type="text" placeholder="A\C Code" aria-label="Search" id="searchedAcCode" onkeyup="ValidateFilters()">
+                    <label for="searchedAcCode" class="text-muted ms-2">A\C Code</label>
+                    <span class="text-danger" asp-validation-for="SearchString.AcCode"></span>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3">
+                    <input asp-for="SearchString.CompanyName" class="form-control" type="text" placeholder="Company Name" aria-label="Search" id="searchedCname" onkeyup="ValidateFilters()">
+                    <label for="searchedCname" class="text-muted ms-2">Company Name</label>
+                    <span class="text-danger" asp-validation-for="SearchString.CompanyName"></span>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3">
+                    <input asp-for="SearchString.PostalCode" class="form-control" type="text" placeholder="Postal Code" aria-label="Search" id="searchedPcode" onkeyup="ValidateFilters()">
+                    <label for="searchedPcode" class="text-muted ms-2">Postal Code</label>
+                    <span class="text-danger" asp-validation-for="SearchString.PostalCode"></span>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3">
+                    <input asp-for="SearchString.Country" class="form-control" type="text" placeholder="Country" aria-label="Search" id="searchedCountry" onkeyup="ValidateFilters()">
+                    <label for="searchedCountry" class="text-muted ms-2">Country</label>
+                    <span class="text-danger" asp-validation-for="SearchString.Country"></span>
+                </div>
+            </div>
+
+            <div class="row pt-0 pb-0 p-2">
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3">
+                    <input asp-for="SearchString.TelePhone" class="form-control" type="text" placeholder="Telephone" aria-label="Search" id="searchedTelephone" onkeyup="ValidateFilters()">
+                    <label for="searchedTelephone" class="text-muted ms-2">Telephone</label>
+                    <span class="text-danger" asp-validation-for="SearchString.TelePhone"></span>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3">
+                    <input asp-for="SearchString.Relation" class="form-control" type="text" placeholder="Relation" aria-label="Search" id="searchedRelation" onkeyup="ValidateFilters()">
+                    <label for="searchedRelation" class="text-muted ms-2">Relation</label>
+                    <span class="text-danger" asp-validation-for="SearchString.Relation"></span>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3">
+                    <input asp-for="SearchString.Currency" class="form-control" type="text" placeholder="Currency" aria-label="Search" id="searchedCurrency" onkeyup="ValidateFilters()">
+                    <label for="searchedCurrency" class="text-muted ms-2">Currency</label>
+                    <span class="text-danger" asp-validation-for="SearchString.Currency"></span>
+                </div>
+
+                <div class="form-floating mb-3 col-sm-6 col-md-3 col-lg-3 text-center align-content-center align-items-center mt-2">
+                    <button id="clear_button" type="reset" disabled class="btn btn-outline-info border-0 shadow border-secondary fw-semibold me-5 px-4 py-2"><i class="fa-solid fa-broom fs-5 colour"></i></button>
+                    <button id="search_button" type="submit" disabled class="btn btn-outline-info border-0 shadow border-secondary fw-semibold me-2 px-4 py-2"><i class="fas fa-search me-2 colour"></i><span class="colour">Search</span></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mt-2" id="requestTable">
+</div>
+
+<div id="showModal">
+</div>
+
+<div id="loader-container" class="loader-container" style="z-index:150">
+    <div id="loader" class="loader" style="z-index:150"></div>
+</div>
+<div class="backdrop" style="z-index:140"></div>
+
+<partial name="_ValidationScriptsPartial" />
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<script>
+    $(window).on('load', function () {
+        showLoader();
+        SearchInTable();
+        setTimeout(function () {
+            hideLoader();
+        }, 300);
+    });
+</script>

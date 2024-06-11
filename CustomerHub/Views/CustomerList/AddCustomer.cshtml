@@ -1,0 +1,117 @@
+﻿@model CustomerHub.DAL.ViewModels.Details
+
+<div class="header px-3">
+    <div class="d-flex justify-content-between">
+        <div class="" style="height:fit-content">
+            
+        </div>
+        <div style="margin-top:12px">
+            <a asp-action="CustomerList" asp-controller="CustomerList" class="nav-item active text-decoration-none shadow text-light" style="background-color:#333!important; border-top:1.5px solid white;border-right:1.5px solid white;">
+                <i class="fas fa-list"></i>
+                <span>List</span>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="container mt-4 d-flex justify-content-between align-items-center">
+    <span class="fw-semibold fs-4 ms-1"> Add Customer Form </span>
+    <a class="btn fw-bold shadow rounded" style="border:1px solid #333" asp-controller="CustomerList" asp-action="CustomerList">
+        <div class="d-flex justify-content-between">
+            <i class="bi bi-caret-left-fill"></i>
+            <span class="d-sm-block d-none">Back</span>
+        </div>
+    </a>
+</div>
+<form id="AddCustomerForm" onsubmit="CreateCustomer()" method="post" enctype="multipart/form-data" class="container form-control shadow d-flex flex-column mx-auto mt-3 p-3">
+    <legend class="mt-1 mb-3">Account Information</legend>
+    <div class="row">
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="CompanyName" type="text" class="form-control bg-transparent border border-2" id="floatingCompanyName" placeholder="CompanyName" onblur="CheckCompany()">
+            <label for="floatingCompanyName" class="ms-2">Company Name</label>
+            <span class="text-danger" asp-validation-for="CompanyName"></span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="Relation" type="text" class="form-control bg-transparent border border-2" id="floatingRelation" placeholder="Relation">
+            <label for="floatingRelation" class="ms-2">Relationship</label>
+            <span class="text-danger" asp-validation-for="Relation"></span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="AcCode" type="text" class="form-control bg-transparent border border-2" id="floatingAcCode" placeholder="A\C Code" onblur="CheckAcCode()">
+            <label for="floatingAcCode" class="ms-2">A\C Code</label>
+            <span class="text-danger" asp-validation-for="AcCode"></span>
+        </div>
+    </div>
+
+    <legend class="mt-2 mb-3">Contact Information</legend>
+    <div class="row">
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="Email" type="email" class="form-control bg-transparent border border-2" id="floatingEmailAtAddCustomer" placeholder="name@example.com" onkeyup="EnableSelectOptionAtAddCustomer()">
+            <label for="floatingEmailAtAddCustomer" class="ms-2">Email</label>
+            <span class="text-danger" asp-validation-for="Email"></span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="TelePhone" type="tel" class="form-control bg-transparent border border-2" id="floatingTelePhone" placeholder="99XXXXXXX">
+            <label for="floatingTelePhone" class="ms-2">TelePhone</label>
+            <span class="text-danger" asp-validation-for="TelePhone"></span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            @{
+                var mailingListOptions = new SelectList(new[]
+                {
+            new { Value = "Subscribed", Text = "Subscribed" },
+            new { Value = "UnSubscribed", Text = "UnSubscribed" }
+            }, "Value", "Text");
+            }
+
+            <select asp-for="@Model.IsSubscribed" class="form-control bg-transparent border border-2" disabled id="floatingIsSubscribedAtAddCustomer" asp-items="@mailingListOptions">
+                <option selected disabled value="">Select an option</option>
+            </select>
+            <span class="text-danger" asp-validation-for="@Model.IsSubscribed"></span>
+        </div>
+    </div>
+
+    <legend class="mt-2 mb-3">Address Information</legend>
+    <div class="row">
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="Address1" type="text" class="form-control bg-transparent border border-2" id="floatingAddress1" placeholder="Address1">
+            <label for="floatingAddress1" class="ms-2">Address1</label>
+            <span class="text-danger" asp-validation-for="Address1"></span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="Address2" type="text" class="form-control bg-transparent border border-2" id="floatingAddress2" placeholder="Address2">
+            <label for="floatingAddress2" class="ms-2">Address2</label>
+            <span class="text-danger" asp-validation-for="Address2"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="Town" type="text" class="form-control bg-transparent border border-2" id="floatingTown" placeholder="Town">
+            <label for="floatingTown" class="ms-2">Town</label>
+            <span class="text-danger" asp-validation-for="Town"></span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="Country" type="text" class="form-control bg-transparent border border-2" id="floatingCountry" placeholder="Country">
+            <label for="floatingCountry" class="ms-2">Country</label>
+            <span class="text-danger" asp-validation-for="Country"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="PostalCode" type="text" class="form-control bg-transparent border border-2" id="floatingPostalCode" placeholder="PostalCode">
+            <label for="floatingPostalCode" class="ms-2">Postal Code</label>
+            <span class="text-danger" asp-validation-for="PostalCode"></span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="Currency" type="text" class="form-control bg-transparent border border-2" id="floatingCurrency" placeholder="Currency">
+            <label for="floatingCurrency" class="ms-2">Currency</label>
+            <span class="text-danger" asp-validation-for="Currency"></span>
+        </div>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+        <button class="btn btn-outline-info border-info me-md-2 mb-3 fw-bolder" type="submit">Submit</button>
+        <button class="btn btn-outline-secondary border-secondary mb-3 fw-bolder" type="reset">Cancel</button>
+    </div>
+</form>
+
+<partial name="_ValidationScriptsPartial" />

@@ -1,0 +1,238 @@
+﻿@model CustomerHub.DAL.ViewModels.Details
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+<form class="FormView d-none" id="EditCustomerForm" method="post" onsubmit="EditCustomerPost(@Model.AcId)">
+    <input type="text" asp-for="@Model.AcId" hidden>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Company Name :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="@Model.AcCode" type="text" class="form-control  h-auto w-auto px-2 py-2" id="floatingCName" placeholder="Company Name" disabled onkeyup="CheckValidation()">
+            <span class="text-danger" asp-validation-for="@Model.AcCode"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Company Name :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="@Model.CompanyName" type="text" class="form-control  h-auto w-auto px-2 py-2" id="floatingCName" placeholder="Company Name" disabled onkeyup="CheckValidation()">
+            <span class="text-danger" asp-validation-for="@Model.CompanyName"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Address1 :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="@Model.Address1" type="text" class="form-control  h-auto w-auto py-2" id="floatingAddress1" placeholder="Address1" disabled onkeyup="CheckValidation()">
+            <span class="text-danger" asp-validation-for="@Model.Address1"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Address2 :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="@Model.Address2" type="text" class="form-control  h-auto w-auto py-2" id="floatingAddress2" placeholder="Address2" disabled onkeyup="CheckValidation()">
+            <span class="text-danger" asp-validation-for="@Model.Address2"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Town :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="@Model.Town" type="text" class="form-control  h-auto w-auto py-2" id="floatingTown" placeholder="Town" disabled onkeyup="CheckValidation()">
+            <span class="text-danger" asp-validation-for="@Model.Town"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Country :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="@Model.Country" type="text" class="form-control  h-auto w-auto py-2" id="floatingCountry" placeholder="Country" disabled onkeyup="CheckValidation()">
+            <span class="text-danger" asp-validation-for="@Model.Country"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">PostalCode :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="@Model.PostalCode" type="text" class="form-control  h-auto w-auto py-2" id="floatingPostalCode" placeholder="PostalCode" disabled onkeyup="CheckValidation()">
+            <span class="text-danger" asp-validation-for="@Model.PostalCode"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Telephone :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="@Model.TelePhone" type="text" class="form-control  h-auto w-auto py-2" id="floatingTelePhone" placeholder="TelePhone" disabled onkeyup="CheckValidation()">
+            <span class="text-danger" asp-validation-for="@Model.TelePhone"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Email :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <input asp-for="@Model.Email" type="text" class="form-control  h-auto w-auto py-2" id="floatingEmailAtInvoice" placeholder="Email" disabled onkeyup="CheckValidation() , EnableSelectOptionInvoice()">
+            <span class="text-danger" asp-validation-for="@Model.Email"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-semibold text-muted">Mailing List :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3 mt-3">
+            @{
+                var mailingListOptions = new SelectList(new[]
+                {
+            new { Value = "Subscribed", Text = "Subscribed" },
+            new { Value = "UnSubscribed", Text = "UnSubscribed" }
+            }, "Value", "Text");
+            }
+
+            <select asp-for="@Model.IsSubscribed" class="form-control  h-auto py-2" style="width:207px" disabled id="floatingIsSubscribedAtInvoice" asp-items="@mailingListOptions">
+                <option selected disabled value="">Select an option</option>
+            </select>
+            <span class="text-danger" asp-validation-for="@Model.IsSubscribed"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3">
+            <span class="fw-semibold text-muted">Groups :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <span onclick="OpenCustomerGroupModal(@Model.AcId,2)" class="fw-semibold" style="border-bottom:solid;padding-bottom:2px;border-width:1px;cursor:pointer"><span class="me-5">@Model.SupplierList</span><i class="bi bi-chevron-down ms-5"></i></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3 text-end">
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3 text-start">
+            <button type="submit" class="submitBtn btn btn-outline-info fw-semibold shadow d-none" disabled>Submit</button>
+            <button type="button" class="cancelBtn btn btn-outline-secondary fw-semibold shadow ms-5 d-none" onclick="Disable()">Cancel</button>
+        </div>
+    </div>
+</form>
+
+
+<div class="NormalView" id="EditCustomerNormalView">
+    <div class="row">
+        <div class="col-12 col-md-3 form-floating mb-3">
+            <span class="fw-semibold text-muted">A\C Code :</span>
+        </div>
+        <div class="col-12 col-md-8 form-floating mb-3">
+            <span class="fw-semibold" style="border-bottom:solid;padding-bottom:4px;border-width:1px">@Model.AcCode <i class="bi bi-chevron-down ms-2"></i></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-3 form-floating mb-3">
+            <span class="fw-semibold text-muted">Company Name :</span>
+        </div>
+        <div class="col-12 col-md-8 form-floating mb-3">
+            <span class="fw-semibold">@Model.CompanyName</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-3 form-floating mb-3">
+            <span class="fw-semibold text-muted">Address1 :</span>
+        </div>
+        <div class="col-12 col-md-8 form-floating mb-3">
+            <span class="fw-semibold">@Model.Address1</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-3 form-floating mb-3">
+            <span class="fw-semibold text-muted">Address2 :</span>
+        </div>
+        <div class="col-12 col-md-8 form-floating mb-3">
+            <span class="fw-semibold">@Model.Address2</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-3 form-floating mb-3">
+            <span class="fw-semibold text-muted">Town :</span>
+        </div>
+        <div class="col-12 col-md-8 form-floating mb-3">
+            <span class="fw-semibold">@Model.Town</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-3 form-floating mb-3">
+            <span class="fw-semibold text-muted">Country :</span>
+        </div>
+        <div class="col-12 col-md-8 form-floating mb-3">
+            <span class="fw-semibold">@Model.Country</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-3 form-floating mb-3">
+            <span class="fw-semibold text-muted">PostalCode :</span>
+        </div>
+        <div class="col-12 col-md-8 form-floating mb-3">
+            <span class="fw-semibold">@Model.PostalCode</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-3 form-floating mb-3">
+            <span class="fw-semibold text-muted">Telephone :</span>
+        </div>
+        <div class="col-12 col-md-8 form-floating mb-3">
+            <span class="fw-semibold">@Model.TelePhone</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-3 form-floating mb-3">
+            <span class="fw-semibold text-muted">Email :</span>
+        </div>
+        <div class="col-12 col-md-8 form-floating mb-3">
+            <span class="fw-semibold">@Model.Email</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-3 form-floating mb-3">
+            <span class="fw-semibold text-muted">Mailing List :</span>
+        </div>
+        <div class="col-12 col-md-8 form-floating mb-3">
+            <span class="fw-semibold">@Model.IsSubscribed</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-3 form-floating mb-3">
+            <span class="fw-semibold text-muted">Groups :</span>
+        </div>
+        <div class="col-12 col-md-8 form-floating mb-3" style="position: relative;display: inline-block;">
+            <span class="fw-semibold" onclick="OpenCustomerGroupModal(@Model.AcId,1)" style="border-bottom:solid;padding-bottom:2px;border-width:1px;cursor:pointer">@Model.SupplierList <i class="bi bi-chevron-down ms-5"></i></span>
+        </div>
+    </div>
+</div>
+<partial name="_ValidationScriptsPartial" />

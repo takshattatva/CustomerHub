@@ -1,0 +1,233 @@
+﻿@model List<CustomerHub.DAL.ViewModels.CustomerList>
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<style>
+    .btn-info {
+        background-color: #4777ae !important;
+        border-color: #4777ae !important;
+        color: white;
+    }
+
+    .btn-outline-info {
+        background-color: transparent !important;
+        border-color: #4777ae !important;
+        color: #4777ae;
+    }
+</style>
+@{
+    double TotalPages = ViewBag.TotalPages;
+    double PageSize = ViewBag.PageSize;
+    double PageNumber = ViewBag.PageNumber;
+    var TotalRecords = ViewBag.TotalRecords;
+    var StartRecord = ViewBag.StartRecords;
+    var EndRecord = ViewBag.EndRecord;
+}
+
+<div class="mt-2">
+    <div class="bg-light p-3">
+        <div class="d-flex justify-content-between">
+            <span class="mt-2 fw-semibold fs-4">Showing @StartRecord - @EndRecord out of @TotalRecords Records </span>
+            <div class="d-flex justify-content-end gap-3">
+                <a class="add-button text-decoration-none" asp-action="AddCustomer" asp-controller="CustomerList">
+                    <svg class="add-svgIcon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 45.402 45.402">
+                        <g><g><path d="M41.267,18.557H26.832V4.134C26.832,1.851,24.99,0,22.707,0c-2.283,0-4.124,1.851-4.124,4.135v14.432H4.141 c-2.283,0-4.139,1.851-4.138,4.135c-0.001,1.141,0.46,2.187,1.207,2.934c0.748,0.749,1.78,1.222,2.92,1.222h14.453V41.27 c0,1.142,0.453,2.176,1.201,2.922c0.748,0.748,1.777,1.211,2.919,1.211c2.282,0,4.129-1.851,4.129-4.133V26.857h14.435 c2.283,0,4.134-1.867,4.133-4.15C45.399,20.425,43.548,18.557,41.267,18.557z"></path> </g> </g>
+                    </svg>
+                </a>
+                <button class="delete-button text-danger" id="deleteBtn" disabled>
+                    <svg class="delete-svgIcon" viewBox="0 0 448 512">
+                        <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="text" value="@PageNumber" id="pageNumber" hidden>
+@if (Model.Count > 0)
+{
+    <table class="table table-responsive mt-2">
+        <thead class="bg-danger">
+            <tr>
+                <th onclick="SortByColumn(1)">
+                    A/C Code
+                </th>
+                <th onclick="SortByColumn(2)">
+                    Customer
+                </th>
+                <th onclick="SortByColumn(3)">
+                    PostalCode
+                </th>
+                <th onclick="SortByColumn(4)">
+                    Country
+                </th>
+                <th onclick="SortByColumn(5)">
+                    Telephone
+                </th>
+                <th onclick="SortByColumn(6)">
+                    Relationship
+                </th>
+                <th onclick="SortByColumn(7)">
+                    Currency
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr data-id="@item.AcId" class="customerrow" style="cursor:pointer">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AcCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PostalCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Country)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TelePhone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Relation)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Currency)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="table table-hover table-responsive">
+        <thead class="bg-light">
+            <tr>
+                <th>
+                    A/C Code
+                </th>
+                <th>
+                    Customer
+                </th>
+                <th>
+                    PostalCode
+                </th>
+                <th>
+                    Country
+                </th>
+                <th>
+                    Telephone
+                </th>
+                <th>
+                    Relationship
+                </th>
+                <th>
+                    Currency
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center align-items-center fw-bold mt-5">
+        <span class="d-md-block d-none fw-bold fs-2">No records has been added yet.</span>
+        <span class="d-md-none d-block fw-semibold fs-4">No records has been added yet.</span>
+    </div>
+    <br />
+    <div class="d-flex align-items-center justify-content-center">
+        <div class="d-md-block d-none"><img src="~/images/no_records_found.png" /></div>
+        <div class="d-md-none d-block"><img src="~/images/no_records_found.png" height="60px" /></div>
+    </div>
+}
+@{
+    <div class="d-flex justify-content-end">
+
+        <span class="mt-2 fw-semibold me-1">Go to Page : </span>
+        <input type="number" class="me-4 h-auto rounded border-1" style="width: 50px!important;border-color:#4777ae" onchange="CustomerList(this.value)" />
+
+        <select class="me-4 text-dark h-auto w-auto rounded dropstart" style="border-color:#4777ae;color:#4777ae;" id="pageSizeDropDown" onchange="CustomerList(@PageNumber)">
+            @foreach (var pageSize in new[] { 10, 30, 50, -1 })
+            {
+                if (pageSize == -1)
+                {
+                    if (ViewBag.PageSize == pageSize)
+                    {
+                        <option value="@pageSize" selected>All</option>
+                    }
+                    else
+                    {
+                        <option value="@pageSize">All</option>
+                    }
+                }
+                else
+                {
+                    if (ViewBag.PageSize == pageSize)
+                    {
+                        <option value="@pageSize" selected>@pageSize</option>
+                    }
+                    else
+                    {
+                        <option value="@pageSize">@pageSize</option>
+                    }
+                }
+            }
+        </select>
+
+        @if (PageNumber == 1) { }
+        else
+        {
+            <button class="btn btn-outline-info shadow ms-1 fw-semibold" onclick="CustomerList(@PageNumber - 1)"><i class="fa-solid fa-caret-left"></i></button>
+        }
+        @for (int i = Math.Max(1, (int)PageNumber - 2); i <= Math.Min(TotalPages, PageNumber + 2); i++)
+        {
+            @if (i == PageNumber)
+            {
+                <button class="btn btn-info shadow ms-1 fw-semibold" onclick="CustomerList(@i)">@i</button>
+            }
+            else
+            {
+                <button class="btn btn-outline-info shadow ms-1 fw-semibold" onclick="CustomerList(@i)">@i</button>
+            }
+        }
+        @if (TotalPages > PageNumber)
+        {
+            <button class="btn btn-outline-info shadow ms-1 fw-semibold" onclick="CustomerList((@PageNumber + 1))"><i class="fa-solid fa-caret-right"></i></button>
+        }
+        else { }
+    </div>
+}
+
+<script>
+    function CustomerList(PageNumber) {
+        var searchvalue = $('#searchvalue').val();
+        var PageSize = $('#pageSizeDropDown').val();
+        $("#PageSize").val(PageSize);
+        $("#PageNumber").val(PageNumber);
+        GetCustomerData();
+    }
+
+    function SortByColumn(SortColumn) {
+        $('#SortColumn').val(SortColumn);
+        if ($('#OrderByAsc').val() == "false") {
+            $('#OrderByAsc').val(true);
+        }
+        else {
+            $('#OrderByAsc').val(false);
+        }
+        GetCustomerData();
+    }
+
+    $('#deleteBtn').click(function () {
+        var acId = [];
+
+        $('.selectedrow').each(function () {
+            var rowId = $(this).attr('data-id');
+            acId.push(rowId);
+        });
+        console.log(acId);
+        DeleteSelectedCustomer(acId);
+    });
+</script>

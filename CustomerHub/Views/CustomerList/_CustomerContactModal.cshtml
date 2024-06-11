@@ -1,0 +1,60 @@
+﻿@model CustomerHub.DAL.ViewModels.CustomerContactDTO
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+<div class="modal fade" id="OpenCustomerContactModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between p-2" style="background-color:#4777ae">
+                <div class="">
+                    <input hidden asp-for="CustomerId" />
+                    <button class="btn shadow btn-light" onclick="AddCustomerContact(@Model.CustomerId)"><i class="fa-solid fa-plus px-2 fs-5" style="color:#4169BF"></i></button>
+                </div>
+                <div class="">
+                    <button type="button" class="btn shadow btn-light" onclick="ClearContactSearch()"><i class="fa-solid fa-broom px-2 fs-5" style="color:#4169BF"></i></button>
+                    <button type="button" class="btn shadow btn-light" onclick="" aria-label="Close" data-bs-dismiss="modal"><i class="fa-solid fa-xmark px-2 fs-5" style="color:#4169BF"></i></button>
+                </div>
+            </div>
+            <div class="p-3">
+                <input type="text" id="ContactSearch" class="rounded w-100 border-info border-1" onkeyup="filterContact()" placeholder="Search" />
+                <span id="search-Record-Info"></span>
+                <div class="bg-light mt-2">
+                    <span class="fw-semibold p-3" style="font-size:15px">Name</span>
+                </div>
+                @if (Model.ContactDetails.Count > 0)
+                {
+                    @foreach (var obj in Model.ContactDetails)
+                    {
+                        <div class="bg-light mt-2 d-flex justify-content-between contact-item">
+                            <div class="d-flex align-items-center justify-content-center p-2 px-5">
+                                <button onclick="GetEditContactCustomerData(@Model.CustomerId,@obj.ContactId);" class="btn btn-outline-success contact-name fw-semibold p-0 px-3" id="contactName_@obj.ContactId" style="font-size:15px;cursor:pointer">@obj.FullName</button>
+                            </div>
+                            @if (Model.CallId == 2)
+                            {
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn bg-transparent" onclick="EditCustomerContact(@obj.ContactId)"><i class="bi bi-pencil-fill" style="color:#592198"></i></button>
+                                    <button type="button" class="btn bg-transparent" onclick="DeleteCustomerContact(@obj.ContactId)"><i class="fa-solid fa-trash-can text-danger"></i></button>
+                                </div>
+                                <div class="">
+                                    <form id="ContactWiseDiv_@obj.ContactId" class="d-none" method="post" onsubmit="PostEditCustomerContactForm(@obj.ContactId, @Model.CustomerId)">
+                                        <input hidden name="ContactId" id="id_@obj.ContactId" asp-for="@obj.ContactId">
+                                        <input hidden name="CustomerId" asp-for="CustomerId">
+                                        <input hidden name="FullName" id="name_@obj.ContactId" asp-for="@obj.FullName">
+                                        <input type="text" class="rounded w-auto h-auto border-info" id="conName_@obj.ContactId" name="FullName" asp-for="@obj.FullName" onkeyup="ValidateEditCustomerContactForm(@obj.ContactId)" />
+                                        <button type="submit" disabled id="submit_@obj.ContactId" class="btn bg-transparent border-0"><i class="fa-regular fa-floppy-disk text-success"></i></button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class=""><img style="height:10%;padding:-94px;opacity:0.5" src="~/images/no_data.png" /></div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

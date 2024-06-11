@@ -1,0 +1,99 @@
+﻿@model CustomerHub.DAL.ViewModels.Details
+@{
+    ViewData["Title"] = "Details";
+}
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<input type="text" asp-for="PageNumber" hidden>
+<div class="header px-3">
+    <div class="d-flex justify-content-between">
+        <div></div>
+        <div style="margin-top:12px">
+            <a asp-action="CustomerList" asp-route-pageNumber="@Model.PageNumber" asp-controller="CustomerList" class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "CustomerList"? "active" : "inactive") text-decoration-none">
+                <i class="fas fa-list"></i>
+                <span>List</span>
+            </a>
+            <a class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "DetailsTab"? "active" : "inactive") text-decoration-none">
+                <i class="fas fa-th-list"></i>
+                <span>Details</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <div class="bg-light p-3">
+        <div class="d-flex justify-content-between align-content-center">
+            <div class="d-flex">
+                <button disabled class="btn rounded-pill shadow text-white h-auto px-3" id="AcCode">@Model.AcCode</button>
+                <span id="cname" class="ms-4 fs-3 fw-semibold" style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">@Model.CompanyName</span>
+            </div>
+            <div>
+                <button class="delete-button text-danger deletebtn" id="deleteBtn" onclick="DeleteCustomer(@Model.AcId)">
+                    <svg class="delete-svgIcon" viewBox="0 0 448 512">
+                        <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="mt-3 col-6">
+        <div class="bg-light p-3" style="border-left:5px solid #333">
+            <div class="d-flex justify-content-start">
+                <i class="fa-solid fa-gopuram mt-2"></i>
+                <span class="fw-bold fs-5 text-dark ms-2">Invoice Address</span>
+                @if (Model.AcId != 0)
+                {
+                    <i class="bi bi-pencil-fill fs-5 ms-3" id="EditInvoiceIcon" style="color:purple;cursor:pointer" onclick="EnableInvoice()"></i>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="mt-3 col-6">
+        <div class="bg-light p-3" style="border-left:5px solid #333">
+            <div class="d-flex justify-content-start">
+                <i class="fa-solid fa-id-card mt-2"></i>
+                <span class="fw-bold fs-5 text-dark ms-2">Contact Information</span>
+                @if (Model.AcId != 0)
+                {
+                    <i class="bi bi-pencil-fill fs-5 ms-3 d-none" id="EditContactIcon" style="color:purple;cursor:pointer" onclick="EnableContact()"></i>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ms-5 mt-3">
+    <div class="row d-none">
+        <div class="col-12 col-md-2 form-floating mb-3 mt-3">
+            <span class="fw-bold text-muted">A/C Code :</span>
+        </div>
+        <div class="col-12 col-md-6 form-floating mb-3">
+            <select disabled id="AcId" class="form-select h-auto w-auto py-2 border-top-0 border-start-0 border-end-0 border-bottom-5 bg-transparent" aria-label="Default select example" asp-for="AcId">
+                <option value="@Model.AcId">@Model.AcCode</option>
+            </select>
+            <span class="text-danger" asp-validation-for="AcId"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6" id="editInvoiceDetailForm"></div>
+        <div class="col-6" id="editContactDetailForm"></div>
+    </div>
+</div>
+
+<div id="showModal">
+</div>
+
+<div id="loader-container" class="loader-container" style="z-index:150">
+    <div id="loader" class="loader" style="z-index:150"></div>
+</div>
+<div class="backdrop" style="z-index:140"></div>
+
+<script>
+    $(window).on('load', function () {
+        GetEditCustomerData($("#AcId").val())
+        GetEditContactCustomerData($("#AcId").val(), 0)
+    });
+</script>
