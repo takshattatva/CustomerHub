@@ -205,11 +205,9 @@ namespace CustomerHub.BAL.Repository
                 {
                     Record = x,
                     Letters = new string(x.AcCode.Where(char.IsDigit).ToArray()).Length == 0 ? "0" : new string(x.AcCode.Where(char.IsLetter).ToArray()),
-                    Numbers = new string(x.AcCode.Where(char.IsDigit).ToArray()),
+                    Numbers = int.TryParse(new string(x.AcCode.Where(char.IsDigit).ToArray()),out int number) ? number : 0,
                 })
-                .OrderBy(x => x.Letters.Length)
-                .ThenBy(x => x.Numbers.Length)
-                .ThenBy(x => x.Letters)
+                .OrderBy(x => x.Letters)
                 .ThenBy(x => x.Numbers)
                 .Select(x => x.Record)
                 :
@@ -217,10 +215,9 @@ namespace CustomerHub.BAL.Repository
                 {
                     Record = x,
                     Letters = new string(x.AcCode.Where(char.IsDigit).ToArray()).Length == 0 ? "0" : new string(x.AcCode.Where(char.IsLetter).ToArray()),
-                    Numbers = new string(x.AcCode.Where(char.IsDigit).ToArray()),
+                    Numbers = int.TryParse(new string(x.AcCode.Where(char.IsDigit).ToArray()),out int number) ? number : 0,
                 })
                 .OrderByDescending(x => x.Letters)
-                .ThenByDescending(x => x.Letters.Length)
                 .ThenByDescending(x => x.Numbers)
                 .Select(x => x.Record),
 
